@@ -723,6 +723,10 @@ export class BbCardComponent implements OnDestroy, OnInit {
 
   async runStrategy(quotes, timestamps, firstIdx, lastIdx) {
     const { firstIndex, lastIndex } = this.findMostCurrentQuoteIndex(quotes.close, firstIdx, lastIdx);
+    console.log('quotes1: ', quotes);
+
+    quotes = await this.getRealTimeQuote(quotes, firstIdx, lastIdx);
+    console.log('quotes2: ', quotes);
     const reals = quotes.close.slice(firstIndex, lastIndex + 1);
     if (!quotes.close[lastIndex]) {
       const log = `Quote data is missing ${reals.toString()}`;
@@ -734,24 +738,31 @@ export class BbCardComponent implements OnDestroy, OnInit {
   }
 
   findMostCurrentQuoteIndex(quotes, firstIndex, lastIndex) {
-    // TODO: Replace with real time quote
-    let ctr = 1,
-      tFirstIndex = firstIndex,
-      tLastIndex = lastIndex;
+    let ctr = 1;
 
-    while (!quotes[tLastIndex] && quotes[tFirstIndex] && ctr < 2) {
-      tFirstIndex = firstIndex - ctr;
-      tLastIndex = lastIndex - ctr;
-      if (quotes[tFirstIndex] && quotes[tLastIndex]) {
-        firstIndex = tFirstIndex;
-        lastIndex = tLastIndex;
-        break;
-      } else if (!quotes[tFirstIndex]) {
+    while (!quotes[lastIndex] && quotes[firstIndex] && ctr < 3) {
+      if (!quotes[firstIndex - ctr]) {
         break;
       }
+      firstIndex -= ctr;
+      lastIndex -= ctr;
       ctr++;
     }
     return { firstIndex, lastIndex };
+  }
+
+  async getRealTimeQuote(quotes, firstIndex, lastIndex) {
+    if (!quotes.close[lastIndex] ) {
+      return await this.backtestService.getPrice({ tickers: [this.order.holding.symbol] }).toPromise()
+        .then(result => {
+          quotes.close[lastIndex] = result.query.results.quote.realtime_price * 1;
+          quotes.low[lastIndex] = result.query.results.quote.realtime_price * 1;
+          quotes.high[lastIndex] = result.query.results.quote.realtime_price * 1;
+          return quotes;
+        });
+    }
+
+    return quotes;
   }
 
   estimateAverageBuyOrderPrice(): number {
