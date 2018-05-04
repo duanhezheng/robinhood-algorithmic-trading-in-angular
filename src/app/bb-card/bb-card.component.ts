@@ -739,7 +739,7 @@ export class BbCardComponent implements OnDestroy, OnInit {
       tFirstIndex = firstIndex,
       tLastIndex = lastIndex;
 
-    while (!quotes[tLastIndex] && quotes[tFirstIndex] && ctr < 3) {
+    while (!quotes[tLastIndex] && quotes[tFirstIndex] && ctr < 2) {
       tFirstIndex = firstIndex - ctr;
       tLastIndex = lastIndex - ctr;
       if (quotes[tFirstIndex] && quotes[tLastIndex]) {
