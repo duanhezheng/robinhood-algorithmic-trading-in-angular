@@ -723,10 +723,8 @@ export class BbCardComponent implements OnDestroy, OnInit {
 
   async runStrategy(quotes, timestamps, firstIdx, lastIdx) {
     const { firstIndex, lastIndex } = this.findMostCurrentQuoteIndex(quotes.close, firstIdx, lastIdx);
-    console.log('quotes1: ', quotes);
 
     quotes = await this.getRealTimeQuote(quotes, firstIdx, lastIdx);
-    console.log('quotes2: ', quotes);
     const reals = quotes.close.slice(firstIndex, lastIndex + 1);
     if (!quotes.close[lastIndex]) {
       const log = `Quote data is missing ${reals.toString()}`;
