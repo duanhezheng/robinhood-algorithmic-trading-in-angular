@@ -1,8 +1,7 @@
-import _ from 'lodash';
-import moment from 'moment';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 import RequestPromise from 'request-promise';
 
-import { feedQuandl } from 'd3fc-financial-feed';
 import YahooFinanceAPI from 'yahoo-finance-data';
 import * as algotrader from 'algotrader';
 
@@ -20,10 +19,6 @@ const api = new YahooFinanceAPI(yahoo);
 const AlphaVantage = algotrader.Data.AlphaVantage;
 const av = new AlphaVantage(config.alpha.key);
 const IEX = algotrader.Data.IEX;
-
-const quandl = feedQuandl()
-  .apiKey('5DsGxgTS3k9BepaWg_MD')
-  .database('WIKI');
 
 function checkDate(toDate, fromDate) {
   let to = moment(toDate);
@@ -67,31 +62,6 @@ class QuoteService {
 
   getRawData(symbol, interval = '1d', range) {
     return api.getHistoricalData(symbol, interval, range);
-  }
-
-  getDataQuandl(symbol, startDate, endDate) {
-    let { start, end } = checkDate(startDate, endDate);
-
-    if (!start.isValid() || !end.isValid()) {
-      throw new errors.Http400Error('Invalid arguments')
-    }
-
-    let quote = quandl
-      .dataset(symbol)
-      .start(start.toDate())
-      .end(end.toDate())
-      .descending(true)
-      .collapse('daily');
-
-    return new Promise(function (resolve, reject) {
-      quote((error, data) => {
-        if (error) {
-          console.log("error: ", error);
-          reject(new errors.FileNotFoundError(error));
-        }
-        resolve(data);
-      });
-    })
   }
 
   getDailyQuotes(symbol, toDate, fromDate) {
@@ -221,4 +191,4 @@ class QuoteService {
 
 }
 
-module.exports.QuoteService = new QuoteService();
+export default new QuoteService();

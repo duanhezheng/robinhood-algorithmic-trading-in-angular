@@ -1,12 +1,11 @@
-import moment from 'moment';
-import json2csv from 'json2csv';
-import fs from 'fs';
+import * as moment from 'moment';
+import * as json2csv from 'json2csv';
+import * as fs from 'fs';
 import RequestPromise from 'request-promise';
 
-import { QuoteService } from './../quote/quote.service';
-import { ReversionService } from './../mean-reversion/reversion.service';
-import * as DecisionService from './../mean-reversion/reversion-decision.service';
-
+import QuoteService from '../quote/quote.service';
+import ReversionService from '../mean-reversion/reversion.service';
+import * as DecisionService from '../mean-reversion/reversion-decision.service';
 import * as errors from '../../components/errors/baseErrors';
 import * as tulind from 'tulind';
 import configurations from '../../config/environment';
@@ -247,4 +246,4 @@ class BacktestService {
   }
 }
 
-module.exports.BacktestService = new BacktestService();
+export default new BacktestService();

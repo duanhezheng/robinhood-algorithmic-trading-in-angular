@@ -175,7 +175,7 @@ function findDeviation(decisions, startDate) {
   return max;
 }
 
-module.exports = {
+export default {
   getTrendsConst,
   getTrendLogic,
   getInitialTrend,

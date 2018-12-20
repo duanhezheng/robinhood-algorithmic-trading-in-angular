@@ -1,13 +1,9 @@
 import * as _ from 'lodash';
 import * as Boom from 'boom';
-import * as  moment from 'moment';
 
-import BaseController from '../../api/templates/base.controller';
+import BaseController from '../templates/base.controller';
 import { QuoteService } from './quote.service';
 
-const errors = require('../../components/errors/baseErrors');
-
-const Schema = require('./quote.model');
 
 class QuoteController extends BaseController {
 
@@ -129,4 +125,4 @@ class QuoteController extends BaseController {
   }
 }
 
-module.exports = new QuoteController();
+export default new QuoteController();

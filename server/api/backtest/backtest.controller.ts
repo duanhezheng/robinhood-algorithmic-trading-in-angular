@@ -1,11 +1,9 @@
 import * as _ from 'lodash';
 import * as Boom from 'boom';
 
-import BaseController from '../../api/templates/base.controller';
+import BaseController from '../templates/base.controller';
 
-import { BacktestService } from './backtest.service';
-
-import * as errors from '../../components/errors/baseErrors';
+import BacktestService from './backtest.service';
 
 class BacktestController extends BaseController {
 
@@ -115,4 +113,4 @@ class BacktestController extends BaseController {
   }
 }
 
-module.exports.BacktestController = new BacktestController();
+export default new BacktestController();

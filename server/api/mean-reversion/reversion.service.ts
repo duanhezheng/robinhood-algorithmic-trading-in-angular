@@ -1,16 +1,9 @@
 const moment = require('moment');
-const algebra = require("algebra.js");
-const math = require("mathjs");
 
 import * as errors from '../../components/errors/baseErrors';
-import { QuoteService } from './../quote/quote.service';
-import { BacktestService } from './../backtest/backtest.service';
+import { QuoteService } from '../quote/quote.service';
 
 const DecisionService = require('./reversion-decision.service');
-
-const Fraction = algebra.Fraction;
-const Expression = algebra.Expression;
-const Equation = algebra.Equation;
 
 const algorithms = {
   MeanReversion_30_90: "0"
@@ -30,43 +23,7 @@ class ReversionService {
         return data;
       });
   }
-
-  getPrice(ticker, currentDate, deviation) {
-    let quotes = null,
-      decisions = null;
-
-    let { endDate, start } = this.getDateRanges();
-
-    if (isNaN(deviation)) {
-      throw errors.InvalidArgumentsError();
-    }
-
-    return QuoteService.getData(ticker, start, endDate)
-      .then(data => {
-        if (data.length === 0) {
-          throw errors.InvalidArgumentsError();
-        }
-        quotes = data;
-        return data;
-      })
-      .then(this.getDecisionData)
-      .then(data => {
-        decisions = data;
-        return this.calcPricing(quotes, quotes.length - 1, data.thirtyTotal, data.ninetyTotal, deviation);
-      })
-      .then(price => {
-        let trend1 = this.getTrend(quotes, quotes.length - 1, price.lower.thirtyAvg, price.lower.ninetyAvg);
-        let trend2 = this.getTrend(quotes, quotes.length - 1, price.upper.thirtyAvg, price.upper.ninetyAvg);
-        price.lower.trend = trend1;
-        price.upper.trend = trend2;
-        return price;
-      })
-      .catch(err => {
-        console.log('ERROR! pricing', err);
-        throw errors.InvalidArgumentsError();
-      });
-  }
-
+  
   getDateRanges(to, from) {
     return {
       to: moment(to).format(),
@@ -275,4 +232,4 @@ class ReversionService {
   }
 }
 
-module.exports.ReversionService = new ReversionService();
+export default new ReversionService();

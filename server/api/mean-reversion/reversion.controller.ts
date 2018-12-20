@@ -1,10 +1,9 @@
 import * as _ from 'lodash';
 import * as Boom from 'boom';
-import * as  moment from 'moment';
 
-import BaseController from '../../api/templates/base.controller';
+import BaseController from '../templates/base.controller';
 
-import { ReversionService } from './../mean-reversion/reversion.service';
+import { ReversionService } from './reversion.service';
 
 const errors = require('../../components/errors/baseErrors');
 
@@ -56,17 +55,6 @@ class ReversionController extends BaseController {
                 parseFloat(request.body.deviation),
                 request.body.short,
                 request.body.long)
-                .then((data) => BaseController.requestGetSuccessHandler(response, data))
-                .catch((err) => BaseController.requestErrorHandler(response, err));
-        }
-    }
-
-    getPrice(request, response) {
-        if (_.isEmpty(request.body)) {
-            return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-        }
-        else {
-            ReversionService.getPrice(request.body.ticker, request.body.end, parseFloat(request.body.deviation))
                 .then((data) => BaseController.requestGetSuccessHandler(response, data))
                 .catch((err) => BaseController.requestErrorHandler(response, err));
         }
