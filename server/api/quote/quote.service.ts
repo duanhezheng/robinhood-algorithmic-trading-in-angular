@@ -21,11 +21,11 @@ const av = new AlphaVantage(config.alpha.key);
 const IEX = algotrader.Data.IEX;
 
 function checkDate(toDate, fromDate) {
-  let to = moment(toDate);
-  let from = moment(fromDate);
+  const to = moment(toDate);
+  const from = moment(fromDate);
 
   if (!to.isValid() || !from.isValid()) {
-    throw new errors.Http400Error('Invalid arguments')
+    throw new errors.Http400Error('Invalid arguments');
   }
 
   return { to, from };
@@ -39,12 +39,12 @@ class QuoteService {
   getData(symbol, interval = '1d', range) {
     return api.getHistoricalData(symbol, interval, range)
       .then((data) => {
-        let quotes = _.get(data, 'chart.result[0].indicators.quote[0]', []);
-        let timestamps = _.get(data, 'chart.result[0].timestamp', []);
-        let converted = [];
+        const quotes = _.get(data, 'chart.result[0].indicators.quote[0]', []);
+        const timestamps = _.get(data, 'chart.result[0].timestamp', []);
+        const converted = [];
 
         timestamps.forEach((val, idx) => {
-          let quote = {
+          const quote = {
             symbol: symbol,
             date: moment.unix(val).toISOString(),
             open: quotes.open[idx],
@@ -80,13 +80,13 @@ class QuoteService {
 
     return RequestPromise(options)
       .then((data) => {
-        let arr = JSON.parse(data);
+        const arr = JSON.parse(data);
         return arr;
       })
       .catch(() => {
-        let { to, from } = checkDate(toDate, fromDate);
+        const { to, from } = checkDate(toDate, fromDate);
 
-        let diff = Math.abs(to.diff(from, 'days'));
+        const diff = Math.abs(to.diff(from, 'days'));
 
         let range;
 

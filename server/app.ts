@@ -12,17 +12,17 @@ process.on('unhandledRejection', (reason, p) => {
   // application specific logging, throwing an error, or other logic here
 });
 
-var express = require('express');
+let express = require('express');
 
-var config = require('./config/environment');
+let config = require('./config/environment');
 
 // Setup server
-var app = express();
+let app = express();
 
-app.set('views', __dirname + '/modules')
+app.set('views', __dirname + '/modules');
 app.set('view engine', 'html');
 
-var server = require('http').createServer(app);
+let server = require('http').createServer(app);
 require('./config/express')(app);
 require('./routes')(app);
 

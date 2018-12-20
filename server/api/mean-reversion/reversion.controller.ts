@@ -16,8 +16,7 @@ class ReversionController extends BaseController {
     getAlgoData(request, response) {
         if (_.isEmpty(request.body)) {
             return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-        }
-        else {
+        } else {
             ReversionService.getData(request.body.ticker, request.body.end)
                 .then((data) => BaseController.requestGetSuccessHandler(response, data))
                 .catch((err) => BaseController.requestErrorHandler(response, err));
@@ -29,8 +28,7 @@ class ReversionController extends BaseController {
             !request.body.short ||
             !request.body.long) {
             return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-        }
-        else {
+        } else {
             ReversionService.runBacktest(request.body.ticker,
                 request.body.end,
                 request.body.start,
@@ -47,8 +45,7 @@ class ReversionController extends BaseController {
             !request.body.short ||
             !request.body.long) {
             return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-        }
-        else {
+        } else {
             ReversionService.runBacktestSnapshot(request.body.ticker,
                 request.body.end,
                 request.body.start,

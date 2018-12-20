@@ -1,6 +1,6 @@
 const moment = require('moment');
-const algebra = require("algebra.js");
-const math = require("mathjs");
+const algebra = require('algebra.js');
+const math = require('mathjs');
 const Fraction = algebra.Fraction;
 const Expression = algebra.Expression;
 const Equation = algebra.Equation;
@@ -57,7 +57,7 @@ function triggerCondition(lastPrice, shortTermAvg, longTermAvg, deviation) {
 }
 
 function solveExpression(thirtyAvgTotal, ninetyAvgTotal, acceptedDeviation) {
-  let thirtyFraction = math.fraction(math.number(math.round(thirtyAvgTotal, 3))),
+  const thirtyFraction = math.fraction(math.number(math.round(thirtyAvgTotal, 3))),
     ninetyFraction = math.fraction(math.number(math.round(ninetyAvgTotal, 3))),
     leftConstant = math.multiply(thirtyFraction, math.fraction('1/30')),
     rightConstant = math.multiply(ninetyFraction, math.fraction('1/90')),
@@ -78,17 +78,17 @@ function solveExpression(thirtyAvgTotal, ninetyAvgTotal, acceptedDeviation) {
 
   eq = new Equation(leftSide, rightSide);
 
-  let x = eq.solveFor('x');
-  let perfectPrice = fractionToPrice(x.toString());
+  const x = eq.solveFor('x');
+  const perfectPrice = fractionToPrice(x.toString());
 
   acceptedDeviation = math.number(math.round(acceptedDeviation, 3));
 
-  let lowerbound = findLowerbound(leftSide.toString(), rightSide.toString(), 0, perfectPrice, acceptedDeviation);
+  const lowerbound = findLowerbound(leftSide.toString(), rightSide.toString(), 0, perfectPrice, acceptedDeviation);
 
-  let lowerThirtyAvg = math.divide(math.add(thirtyAvgTotal, lowerbound), 30);
-  let upperThirtyAvg = math.divide(math.add(thirtyAvgTotal, perfectPrice), 30);
-  let lowerNinetyAvg = math.divide(math.add(thirtyAvgTotal, lowerbound), 30);
-  let upperNinetyAvg = math.divide(math.add(thirtyAvgTotal, perfectPrice), 30);
+  const lowerThirtyAvg = math.divide(math.add(thirtyAvgTotal, lowerbound), 30);
+  const upperThirtyAvg = math.divide(math.add(thirtyAvgTotal, perfectPrice), 30);
+  const lowerNinetyAvg = math.divide(math.add(thirtyAvgTotal, lowerbound), 30);
+  const upperNinetyAvg = math.divide(math.add(thirtyAvgTotal, perfectPrice), 30);
   return {
     upper: { price: perfectPrice, thirtyDay: upperThirtyAvg, ninetyDay: upperNinetyAvg },
     lower: { price: lowerbound, thirtyDay: lowerThirtyAvg, ninetyDay: lowerNinetyAvg }
@@ -102,7 +102,7 @@ function findLowerbound(fn1, fn2, lower, upper, acceptedDifference) {
     result = -1;
 
   while (lower <= upper) {
-    mid = math.round((upper + lower) / 2, 2)
+    mid = math.round((upper + lower) / 2, 2);
     avg1 = math.eval(fn1, { x: mid });
     avg2 = math.eval(fn2, { x: mid });
     if (math.compare(calculatePercentDifference(avg1, avg2), acceptedDifference) > 0) {
@@ -124,21 +124,21 @@ function fractionToPrice(fraction) {
 }
 
 function calcReturns(decisions, deviation, startDate) {
-  let results = decisions.reduce(function (orders, day) {
+  const results = decisions.reduce(function (orders, day) {
     if (moment(day.date).isAfter(moment(startDate).subtract(1, 'day').format())) {
       if (triggerCondition(day.close, day.shortTermAvg, day.longTermAvg, deviation)) {
         if (day.trending === trends.down) {
           orders.trades++;
-          //Sell
+          // Sell
           if (orders.buy.length > 0) {
-            let holding = orders.buy.shift(),
+            const holding = orders.buy.shift(),
               profit = day.close - holding;
             orders.total += holding;
             orders.net += profit;
           }
         } else if (day.trending === trends.up) {
           orders.trades++;
-          //Buy
+          // Buy
           orders.buy.push(day.close);
         }
       }
@@ -146,13 +146,13 @@ function calcReturns(decisions, deviation, startDate) {
     return orders;
   }, { buy: [], total: 0, net: 0, trades: 0 });
 
-  let totalTrades = results.trades;
+  const totalTrades = results.trades;
   let totalReturns = math.divide(results.net, results.total);
 
   if (isNaN(totalReturns)) {
     totalReturns = 0;
   }
-  let response = { totalReturns, totalTrades };
+  const response = { totalReturns, totalTrades };
 
   return response;
 }
