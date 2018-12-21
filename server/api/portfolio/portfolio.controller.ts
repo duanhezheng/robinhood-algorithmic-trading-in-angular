@@ -5,8 +5,6 @@ import BaseController from '../templates/base.controller';
 
 import PortfolioService from './portfolio.service';
 
-import * as errors from '../../components/errors/baseErrors';
-
 class PortfolioController extends BaseController {
 
   constructor() {

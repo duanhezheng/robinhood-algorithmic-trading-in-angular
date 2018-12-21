@@ -28,8 +28,8 @@ require('./routes')(app);
 
 // Start server
 
-server.listen(configurations.configurations, config.ip, function () {
-  console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+server.listen(configurations.configurations, configurations.ip, function () {
+  console.log('Express server listening on %d, in %s mode', configurations.port, app.get('env'));
 });
 
 // Expose app

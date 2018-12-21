@@ -1,4 +1,4 @@
-import { PortfolioController } from './portfolio.controller';
+import PortfolioController from './portfolio.controller';
 
 export let portfolio = (request, response) => {
   PortfolioController.getPortfolio(request, response);

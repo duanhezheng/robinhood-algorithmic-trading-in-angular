@@ -12,7 +12,7 @@ const all = {
     },
     alpha: {
         key: _.get(credentials, 'alpha.key', null)
-    }
+    },
     apps: {
         goliath: 'http://localhost:8100/'
     }
@@ -21,7 +21,7 @@ const all = {
 // ==============================================
 const configuations = _.merge(
     all,
-    require('./' + process.env.NODE_ENV + '.js') || {});
+    require('./' + process.env.NODE_ENV + '.ts') || {});
 
   export default configuations;
 

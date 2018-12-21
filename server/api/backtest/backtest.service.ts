@@ -1,11 +1,13 @@
 import * as moment from 'moment';
 import * as json2csv from 'json2csv';
 import * as fs from 'fs';
+import * as _ from 'lodash';
+
 import RequestPromise from 'request-promise';
 
 import QuoteService from '../quote/quote.service';
 import ReversionService from '../mean-reversion/reversion.service';
-import * as DecisionService from '../mean-reversion/reversion-decision.service';
+import DecisionService from '../mean-reversion/reversion-decision.service';
 import BaseErrors from '../../components/errors/baseErrors';
 import * as tulind from 'tulind';
 import configurations from '../../config/environment';
