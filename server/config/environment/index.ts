@@ -21,7 +21,7 @@ const all = {
 // ==============================================
 const configuations = _.merge(
     all,
-    require('./' + process.env.NODE_ENV + '.ts') || {});
+    require('./' + process.env.NODE_ENV + '.js') || {});
 
   export default configuations;
 
