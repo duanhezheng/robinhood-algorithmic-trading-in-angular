@@ -1,36 +1,53 @@
-/**
- * Main application file
- */
+import * as express from 'express';
+import * as compression from 'compression';  // compresses requests
+import * as bodyParser from 'body-parser';
+import * as lusca from 'lusca';
+import * as path from 'path';
 
-'use strict';
+import * as quote from './api/quote';
+import * as meanReversion from './api/mean-reversion';
+import * as backtest from './api/backtest';
+import * as portfolio from './api/portfolio';
 
-// Set default node environment to development
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+import configurations from './config/environment';
 
-process.on('unhandledRejection', (reason, p) => {
-  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
-  // application specific logging, throwing an error, or other logic here
-});
-
-const express = require('express');
-
-import configurations from './config/environment/index';
-
-// Setup server
+// Create Express server
 const app = express();
+const env = app.get('env');
 
-app.set('views', __dirname + '/modules');
-app.set('view engine', 'html');
+// Express configuration
+app.set('port', process.env.PORT || 9000);
+app.set('views', path.join(__dirname, '../views'));
+app.set('view engine', 'pug');
+app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(lusca.xframe('SAMEORIGIN'));
+app.use(lusca.xssProtection(true));
 
-const server = require('http').createServer(app);
-require('./config/express')(app);
-require('./routes')(app);
+app.use(
+  express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 })
+);
 
-// Start server
+if ('production' === env) {
+  app.use(express.static(path.join(configurations.root, 'dist')));
+  app.set('appPath', 'dist');
+}
 
-server.listen(configurations.configurations, configurations.ip, function () {
-  console.log('Express server listening on %d, in %s mode', configurations.port, app.get('env'));
+if ('development' === env || 'test' === env) {
+  app.use(express.static(path.join(configurations.root, '.tmp')));
+  app.use(express.static(path.join(configurations.root, 'dist')));
+  app.set('appPath', 'dist');
+}
+
+app.use('/api/quote', quote);
+app.use('/api/mean-reversion', meanReversion);
+app.use('/api/backtest', backtest);
+app.use('/api/portfolio', portfolio);
+
+app.route('/*')
+  .get(function(req, res) {
+    res.sendfile(app.get('appPath') + '/index.html');
 });
 
-// Expose app
-exports = module.exports = app;
+export default app;

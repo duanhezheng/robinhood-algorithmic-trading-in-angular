@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as _ from 'lodash';
 
 import * as credentials from './credentials';
-const all = {
+const configurations = {
     env: process.env.NODE_ENV,
     root: path.normalize(__dirname + '/../../..'),
     port: process.env.PORT || 9000,
@@ -17,11 +17,6 @@ const all = {
         goliath: 'http://localhost:8100/'
     }
 };
-// Export the config object based on the NODE_ENV
-// ==============================================
-const configuations = _.merge(
-    all,
-    require('./' + process.env.NODE_ENV + '.js') || {});
 
-  export default configuations;
+export default configurations;
 

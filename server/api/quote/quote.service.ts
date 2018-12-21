@@ -1,11 +1,9 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import RequestPromise from 'request-promise';
-
-import { YahooFinanceAPI } from 'yahoo-finance-data';
+const YahooFinanceAPI = require('yahoo-finance-data');
 import * as algotrader from 'algotrader';
 
-import BaseErrors from '../../components/errors/baseErrors';
 import configurations from '../../config/environment';
 
 const yahoo = {
