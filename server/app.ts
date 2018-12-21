@@ -12,23 +12,23 @@ process.on('unhandledRejection', (reason, p) => {
   // application specific logging, throwing an error, or other logic here
 });
 
-let express = require('express');
+const express = require('express');
 
-let config = require('./config/environment');
+import configurations from './config/environment/index';
 
 // Setup server
-let app = express();
+const app = express();
 
 app.set('views', __dirname + '/modules');
 app.set('view engine', 'html');
 
-let server = require('http').createServer(app);
+const server = require('http').createServer(app);
 require('./config/express')(app);
 require('./routes')(app);
 
 // Start server
 
-server.listen(config.port, config.ip, function () {
+server.listen(configurations.configurations, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
 

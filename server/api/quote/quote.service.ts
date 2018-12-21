@@ -2,22 +2,22 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import RequestPromise from 'request-promise';
 
-import YahooFinanceAPI from 'yahoo-finance-data';
+import { YahooFinanceAPI } from 'yahoo-finance-data';
 import * as algotrader from 'algotrader';
 
-import errors from '../../components/errors/baseErrors';
-import config from '../../config/environment';
+import BaseErrors from '../../components/errors/baseErrors';
+import configurations from '../../config/environment';
 
 const yahoo = {
-  key: config.yahoo.key,
-  secret: config.yahoo.secret
+  key: configurations.yahoo.key,
+  secret: configurations.yahoo.secret
 };
 
-const appUrl = config.apps.goliath;
+const appUrl = configurations.apps.goliath;
 
 const api = new YahooFinanceAPI(yahoo);
 const AlphaVantage = algotrader.Data.AlphaVantage;
-const av = new AlphaVantage(config.alpha.key);
+const av = new AlphaVantage(configurations.alpha.key);
 const IEX = algotrader.Data.IEX;
 
 function checkDate(toDate, fromDate) {
@@ -25,7 +25,7 @@ function checkDate(toDate, fromDate) {
   const from = moment(fromDate);
 
   if (!to.isValid() || !from.isValid()) {
-    throw new errors.Http400Error('Invalid arguments');
+    throw new BaseErrors.Http400Error('Invalid arguments');
   }
 
   return { to, from };

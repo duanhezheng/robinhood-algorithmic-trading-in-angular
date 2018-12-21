@@ -6,7 +6,7 @@ import RequestPromise from 'request-promise';
 import QuoteService from '../quote/quote.service';
 import ReversionService from '../mean-reversion/reversion.service';
 import * as DecisionService from '../mean-reversion/reversion-decision.service';
-import * as errors from '../../components/errors/baseErrors';
+import BaseErrors from '../../components/errors/baseErrors';
 import * as tulind from 'tulind';
 import configurations from '../../config/environment';
 
@@ -91,7 +91,8 @@ class BacktestService {
               snapshots.push({ ...averagesRange, ...returns, recommendedDifference });
 
               if (i % 3 === 0 && j === longTerm[longTerm.length - 1] - 1) {
-                fs.writeFile(`${ticker}_analysis_${startDate}-${currentDate}_${i}.csv`, json2csv({ data: snapshots, fields: fields }), function (err) {
+                fs.writeFile(`${ticker}_analysis_${startDate}-
+                  ${currentDate}_${i}.csv`, json2csv({ data: snapshots, fields: fields }), function (err) {
                   if (err) { throw err; }
                   console.log('file saved');
                 });
@@ -125,33 +126,6 @@ class BacktestService {
   }
 
   getBuySignal() {
-    const rocLen = roc[0].length - 1;
-    const roc1 = _.round(roc[0][rocLen], 3);
-    let num, den;
-    if (this.momentum > roc1) {
-      num = this.momentum;
-      den = roc1;
-    } else {
-      den = this.momentum;
-      num = roc1;
-    }
-
-    const momentumDiff = _.round(_.divide(num, den), 3);
-
-    const log = `${this.order.holding.symbol} Event - time: ${moment.unix(signalTime).format()}, ` +
-    `momentumDiff: ${momentumDiff}, roc: ${roc1}, mid: ${mid[0]}, lower: ${lower[0]}, mfi: ${this.mfi}`;
-
-    this.reportingService.addAuditLog(this.order.holding.symbol, log);
-
-    if (momentumDiff < -0.7 || momentumDiff > 0.7) {
-      if (roc1 < -0.006 || roc1 > 0.006) {
-        if (this.mfi < 20) {
-          if (signalPrice < lower[0]) {
-            return this.daytradeService.createOrder(this.order.holding, 'Buy', orderQuantity, price, signalTime);
-          }
-        }
-      }
-    }
   }
 
   getMeanReversionChart(ticker, currentDate, startDate, deviation, shortTerm, longTerm) {
@@ -161,7 +135,7 @@ class BacktestService {
       })
       .catch(err => {
         console.log('ERROR! backtest', err);
-        throw errors.InvalidArgumentsError();
+        throw BaseErrors.InvalidArgumentsError();
       });
   }
 

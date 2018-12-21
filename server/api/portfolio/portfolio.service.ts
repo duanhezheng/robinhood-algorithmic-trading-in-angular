@@ -1,11 +1,6 @@
-import moment from 'moment';
-import json2csv from 'json2csv';
-import fs from 'fs';
 import request from 'request-promise';
 
 import Robinhood from 'robinhood';
-
-import * as errors from '../../components/errors/baseErrors';
 
 const RobinHoodApi = require('robinhood-api');
 const robinhood = new RobinHoodApi();
@@ -48,7 +43,7 @@ class PortfolioService {
     return request.post({
       uri: apiUrl + 'api-token-logout/',
       headers: {
-        'Authorization': 'Bearer ' + _this.token
+        'Authorization': 'Bearer ' + token
       }
     })
       .then(() => reply.status(200).send({}))
@@ -84,7 +79,7 @@ class PortfolioService {
   getResource(instrument, reply) {
     (async () => {
       try {
-        let inst = await robinhood.getResource(instrument);
+        const inst = await robinhood.getResource(instrument);
         reply.status(200).send(inst);
       } catch (e) {
         reply.status(500).send(e);
@@ -104,7 +99,7 @@ class PortfolioService {
   }
 
   sell(account, token, instrumentUrl, symbol, quantity, price, type = 'limit', reply) {
-    let headers = {
+    const headers = {
       'Accept': '*/*',
       'Accept-Encoding': 'gzip, deflate',
       'Accept-Language': 'en;q=1, fr;q=0.9, de;q=0.8, ja;q=0.7, nl;q=0.6, it;q=0.5',
@@ -115,7 +110,7 @@ class PortfolioService {
       'Authorization': `Token ${token}`
     };
 
-    console.log('Sell order: ',{
+    console.log('Sell order: ', {
       account: account,
       instrument: instrumentUrl,
       price: price,
@@ -149,7 +144,7 @@ class PortfolioService {
   }
 
   buy(account, token, instrumentUrl, symbol, quantity, price, type = 'limit', reply) {
-    let headers = {
+    const headers = {
       'Accept': '*/*',
       'Accept-Encoding': 'gzip, deflate',
       'Accept-Language': 'en;q=1, fr;q=0.9, de;q=0.8, ja;q=0.7, nl;q=0.6, it;q=0.5',
@@ -205,4 +200,4 @@ class PortfolioService {
   }
 }
 
-module.exports.PortfolioService = new PortfolioService();
+export default new PortfolioService();

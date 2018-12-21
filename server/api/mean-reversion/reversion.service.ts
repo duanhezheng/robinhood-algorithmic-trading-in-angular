@@ -1,7 +1,7 @@
 const moment = require('moment');
 
-import * as errors from '../../components/errors/baseErrors';
-import { QuoteService } from '../quote/quote.service';
+import BaseErrors from '../../components/errors/baseErrors';
+import QuoteService from '../quote/quote.service';
 
 const DecisionService = require('./reversion-decision.service');
 
@@ -35,7 +35,7 @@ class ReversionService {
     const { to, from } = this.getDateRanges(toDate, fromDate);
 
     if (isNaN(deviation)) {
-      throw errors.InvalidArgumentsError();
+      throw BaseErrors.InvalidArgumentsError();
     }
 
     return this.getData(ticker, to, from)
@@ -44,7 +44,7 @@ class ReversionService {
       })
       .catch(err => {
         console.log('ERROR! backtest', err);
-        throw errors.InvalidArgumentsError();
+        throw BaseErrors.InvalidArgumentsError();
       });
   }
 
@@ -92,7 +92,7 @@ class ReversionService {
       })
       .catch(err => {
         console.log('ERROR! backtest snapshot', err, ticker);
-        throw errors.InvalidArgumentsError();
+        throw BaseErrors.InvalidArgumentsError();
       });
   }
 

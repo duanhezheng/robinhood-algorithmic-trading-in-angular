@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import * as Boom from 'boom';
 
-import BaseController from '../../api/templates/base.controller';
+import BaseController from '../templates/base.controller';
 
-import { PortfolioService } from './portfolio.service';
+import PortfolioService from './portfolio.service';
 
 import * as errors from '../../components/errors/baseErrors';
 
@@ -16,8 +16,7 @@ class PortfolioController extends BaseController {
   login(request, response) {
     if (_.isEmpty(request.body)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.login(request.body.username, request.body.password, response);
     }
   }
@@ -25,8 +24,7 @@ class PortfolioController extends BaseController {
   mfaLogin(request, response) {
     if (_.isEmpty(request.body)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.mfaLogin(request.body.username, request.body.password, request.body.code, response);
     }
   }
@@ -34,8 +32,7 @@ class PortfolioController extends BaseController {
   logout(request, response) {
     if (_.isEmpty(request.body)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.expireToken(request.body.token, response);
     }
   }
@@ -43,8 +40,7 @@ class PortfolioController extends BaseController {
   getPortfolio(request, response) {
     if (_.isEmpty(request.headers.authorization)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.getPortfolio(request.headers.authorization.replace('Bearer ', ''), response);
     }
   }
@@ -52,18 +48,17 @@ class PortfolioController extends BaseController {
   getPositions(request, response) {
     if (_.isEmpty(request.headers.authorization)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.getPositions(request.headers.authorization.replace('Bearer ', ''), response);
     }
   }
 
   getResources(request, response) {
-    const urlRegex = /^https\:\/\/api\.robinhood\.com\/instruments\/[a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12}\/{0,}$/;
+    const urlRegex =
+      /^https\:\/\/api\.robinhood\.com\/instruments\/[a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12}\/{0,}$/;
     if (_.isEmpty(request.body) || _.isEmpty(request.body.instrument) || !request.body.instrument.match(urlRegex)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.getResource(request.body.instrument, response);
     }
   }
@@ -71,8 +66,7 @@ class PortfolioController extends BaseController {
   sell(request, response) {
     if (_.isEmpty(request.headers.authorization) || _.isEmpty(request.body)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.sell(request.body.account,
         request.headers.authorization.replace('Bearer ', ''),
         request.body.url,
@@ -89,8 +83,7 @@ class PortfolioController extends BaseController {
   buy(request, response) {
     if (_.isEmpty(request.headers.authorization) || _.isEmpty(request.body)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.buy(request.body.account,
         request.headers.authorization.replace('Bearer ', ''),
         request.body.url,
@@ -108,8 +101,7 @@ class PortfolioController extends BaseController {
     console.log('body: ', request.body);
     if (_.isEmpty(request.body)) {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    }
-    else {
+    } else {
       PortfolioService.getInstruments(request.body.symbol, response);
     }
   }
@@ -119,4 +111,4 @@ class PortfolioController extends BaseController {
   }
 }
 
-module.exports.PortfolioController = new PortfolioController();
+export default new PortfolioController();

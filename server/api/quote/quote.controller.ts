@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as Boom from 'boom';
 
 import BaseController from '../templates/base.controller';
-import { QuoteService } from './quote.service';
+import QuoteService from './quote.service';
 
 
 class QuoteController extends BaseController {
@@ -89,16 +89,6 @@ class QuoteController extends BaseController {
       return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
     } else {
       QuoteService.postIntradayData(request.body)
-        .then((data) => BaseController.requestGetSuccessHandler(response, data))
-        .catch((e) => BaseController.requestErrorHandler(response, e));
-    }
-  }
-
-  getCompanySummary(request, response) {
-    if (_.isEmpty(request.body)) {
-      return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
-    } else {
-      QuoteService.getCompanySummary(request.body.symbol)
         .then((data) => BaseController.requestGetSuccessHandler(response, data))
         .catch((e) => BaseController.requestErrorHandler(response, e));
     }

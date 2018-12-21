@@ -4,13 +4,16 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "nodemon server/app.js --exec babel-node",
-    "build": "ng build && babel server -d dist",
-    "serve": "node dist/index.js",
+    "start": "npm run build && npm run serve",
+    "build": "ng build && npm run build-ts && npm run tslint",
+    "serve": "node dist/out-tsc/server/app.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "ng build --environment=prod"
+    "postinstall": "ng build --environment=prod",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json"
   },
   "private": true,
   "dependencies": {

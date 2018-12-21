@@ -3,9 +3,7 @@ import * as Boom from 'boom';
 
 import BaseController from '../templates/base.controller';
 
-import { ReversionService } from './reversion.service';
-
-const errors = require('../../components/errors/baseErrors');
+import ReversionService from './reversion.service';
 
 class ReversionController extends BaseController {
 
@@ -17,7 +15,7 @@ class ReversionController extends BaseController {
         if (_.isEmpty(request.body)) {
             return response.status(Boom.badRequest().output.statusCode).send(Boom.badRequest().output);
         } else {
-            ReversionService.getData(request.body.ticker, request.body.end)
+            ReversionService.getData(request.body.ticker, request.body.end, request.body.start)
                 .then((data) => BaseController.requestGetSuccessHandler(response, data))
                 .catch((err) => BaseController.requestErrorHandler(response, err));
         }
@@ -58,4 +56,4 @@ class ReversionController extends BaseController {
     }
 }
 
-module.exports = new ReversionController();
+export default new ReversionController();
