@@ -20,17 +20,6 @@ const AlphaVantage = algotrader.Data.AlphaVantage;
 const av = new AlphaVantage(configurations.alpha.key);
 const IEX = algotrader.Data.IEX;
 
-function checkDate(toDate, fromDate) {
-  const to = moment(toDate);
-  const from = moment(fromDate);
-
-  if (!to.isValid() || !from.isValid()) {
-    throw new BaseErrors.Http400Error('Invalid arguments');
-  }
-
-  return { to, from };
-}
-
 class QuoteService {
   /*
   * Interval: ["2m", "1d"]
@@ -65,14 +54,11 @@ class QuoteService {
   }
 
   getDailyQuotes(symbol, toDate, fromDate) {
-    let { to, from } = checkDate(toDate, fromDate);
 
-    const diff = Math.abs(to.diff(from, 'days'));
+    const to = moment(toDate);
+    const from = moment(fromDate);
 
-    to = to.format('YYYY-MM-DD');
-    from = from.format('YYYY-MM-DD');
-
-    const query = `${appUrl}backtest?ticker=${symbol}&to=${to}&from=${from}`;
+    const query = `${appUrl}backtest?ticker=${symbol}&to=${to.format('YYYY-MM-DD')}&from=${from.format('YYYY-MM-DD')}`;
     const options = {
       method: 'POST',
       uri: query
@@ -84,8 +70,6 @@ class QuoteService {
         return arr;
       })
       .catch(() => {
-        const { to, from } = checkDate(toDate, fromDate);
-
         const diff = Math.abs(to.diff(from, 'days'));
 
         let range;

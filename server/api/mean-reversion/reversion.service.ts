@@ -5,10 +5,6 @@ import QuoteService from '../quote/quote.service';
 
 const DecisionService = require('./reversion-decision.service');
 
-const algorithms = {
-  MeanReversion_30_90: '0'
-};
-
 class ReversionService {
   getTrend(quotes, end, thirtyDay, ninetyDay, deviation) {
     let trend = DecisionService.getInitialTrend(quotes, end, deviation);
@@ -78,9 +74,9 @@ class ReversionService {
         return { ...returns, deviation, recommendedDifference, shortTerm, longTerm };
       })
       .then(algoStats => {
-        let lastPrice = quotes[quotes.length - 1].close,
-          lastVolume = quotes[quotes.length - 1].volume,
-          trending = DecisionService.getTrendsConst().indet;
+        const lastPrice = quotes[quotes.length - 1].close,
+          lastVolume = quotes[quotes.length - 1].volume;
+        let trending = DecisionService.getTrendsConst().indet;
 
         // Check to see if yesterday's moving avgs trigger a signal
         if (DecisionService.triggerCondition(lastPrice, yesterdayDecision.shortTermAvg, yesterdayDecision.longTermAvg, deviation)) {
@@ -118,15 +114,15 @@ class ReversionService {
 
     const trend = DecisionService.getInitialTrend(quotes, endIdx);
 
-    const data = quotes.slice(startIdx, endIdx + 1);
+    const data = quotes.slice(startIdx, endIdx + 1),
+      date = moment(data[data.length - 1].date).valueOf(),
+      close = data[data.length - 1].close;
 
-    let date          = moment(data[data.length - 1].date).valueOf(),
-        trending      = null,
-        deviation     = null,
-        shortTermAvg  = null,
-        longTermAvg   = null,
-        close         = data[data.length - 1].close,
-        total         = 0;
+    let trending = null,
+      deviation = null,
+      shortTermAvg = null,
+      longTermAvg = null,
+      total = 0;
 
     for (let i = data.length - 1; i > 0; i--) {
       const current = data[i];
@@ -152,14 +148,14 @@ class ReversionService {
   }
 
   getMA(history, rangeStart, rangeEnd) {
-    let date          = moment(history[history.length - 1].date).valueOf(),
-        close         = history[history.length - 1].close,
-        total         = 0,
-        averages      = {};
+    const date = moment(history[history.length - 1].date).valueOf(),
+      close = history[history.length - 1].close,
+      averages = {};
 
+    let total = 0;
     for (let i = history.length - 1; i > 0; i--) {
       const current = history[i],
-          period = history.length - i;
+        period = history.length - i;
       total += current.close;
       if (period >= rangeStart && period <= rangeEnd) {
         averages[period] = total / period;
