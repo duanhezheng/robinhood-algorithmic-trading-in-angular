@@ -113,8 +113,8 @@ export class BbCardComponent implements OnInit, OnChanges {
 
     this.firstFormGroup = this._formBuilder.group({
       quantity: [this.order.quantity, Validators.required],
-      lossThreshold: [this.order.lossThreshold || -0.03, Validators.required],
-      profitTarget: [{ value: this.order.profitTarget || 0.03, disabled: false }, Validators.required],
+      lossThreshold: [this.order.lossThreshold || -0.01, Validators.required],
+      profitTarget: [{ value: this.order.profitTarget || 0.01, disabled: false }, Validators.required],
       orderSize: [this.order.orderSize || this.daytradeService.getDefaultOrderSize(this.order.quantity), Validators.required],
       orderType: [this.order.side, Validators.required],
       preferences: []
@@ -840,11 +840,6 @@ export class BbCardComponent implements OnInit, OnChanges {
       return null;
     }
 
-    // if (this.config.MeanReversion1) {
-    //   if (signalPrice >= upper[0]) {
-    //     return this.daytradeService.createOrder(this.order.holding, 'Sell', orderQuantity, price, signalTime);
-    //   }
-    // } else {
     const rocLen = roc[0].length - 1;
     const roc1 = _.round(roc[0][rocLen], 3);
 
@@ -865,7 +860,6 @@ export class BbCardComponent implements OnInit, OnChanges {
 
       return this.daytradeService.createOrder(this.order.holding, 'Sell', orderQuantity, price, signalTime);
     }
-    // }
 
     return null;
   }
